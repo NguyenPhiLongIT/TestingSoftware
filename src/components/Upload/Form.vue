@@ -1,0 +1,141 @@
+<script>
+export default {
+    data() {
+        return {
+            formData: {
+                title: "",
+                categoryId: null,
+                description: "",
+                authorId: null,
+                status: 0,
+            },
+            Categories: [
+                { id: 1, name: "Kinh tế" },
+                { id: 2, name: "Luận văn" },
+                { id: 3, name: "Giáo dục" },
+                { id: 4, name: "Khoa học" },
+                { id: 5, name: "Sức khỏe" },
+            ],
+            accountId: localStorage.getItem("userId") || "",
+            isLoading: false,
+            selectedFile: null,
+        };
+    },
+
+    methods: {
+        handleFileUpload(event) {
+            // this.formData.file = file;
+            // const file = event.target.files[0];
+            this.selectedFile = event.target.files[0];
+            if (!this.selectedFile) {
+                alert("Vui lòng chọn một file hợp lệ.");
+                return;
+            }
+            console.log("File được chọn:", this.selectedFile);
+        },
+        submitForm() {
+            this.isLoading = true;
+            setTimeout(() => {
+                console.log("Dữ liệu form:", this.formData);
+                if (this.selectedFile) {
+                    console.log("File tải lên:", this.selectedFile.name);
+                }
+                alert("Tải lên thành công!");
+                this.isLoading = false;
+            }, 1000);
+        },
+
+    },
+};
+</script>
+
+<template>
+    <div class="apply-course">
+        <div class="wrapper">
+            <form @submit.prevent="submitForm" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label for="title" class="form-label">Tiêu đề</label>
+                        <input id="title" type="text" class="form-control" placeholder="Nhập tiêu đề"
+                            v-model="formData.title" />
+                    </div>
+                    <div class="col-12 d-grid gap-1 mb-3">
+                        <label>Danh mục</label>
+                        <select class="select-category" name="categoryId" id="categories" v-model="formData.categoryId">
+                            <option v-for="item in Categories" :value="item.id">
+                                {{ item.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="formFile" class="form-label">Upload file</label>
+                        <input class="upload form-control" type="file" id="formFile" @change="handleFileUpload"/>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="description form-control" type="text" placeholder="Nhập mô tả"
+                            name="description" v-model="formData.description"></textarea>
+                    </div>
+                    <div class="col-12 text-center pt-4">
+                        <button class="btn-apply" type="submit" :disabled="isLoading">
+                            <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Lưu thông tin
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<style scoped lang="scss">
+.apply-course .wrapper {
+    font-size: 17px;
+    padding: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.select-category {
+    width: 100%;
+    border: none;
+    background-color: #e9ecef;
+    padding: 10px 20px;
+}
+
+.btn-apply {
+    background-color: #1976d2;
+    border: 2px solid #fff;
+    padding: 10px 20px;
+    color: #fff;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+        background-color: #0e1a61;
+    }
+}
+
+.description {
+    background: #e9ecef;
+    height: 100px;
+    border: 0;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px 20px;
+}
+
+.upload {
+    background: #e9ecef;
+}
+.spinner-border {
+    margin-right: 5px;
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+</style>
