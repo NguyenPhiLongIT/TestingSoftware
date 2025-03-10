@@ -129,12 +129,12 @@ export default {
             <span class="close" @click="closeModal">&times;</span>
             <p>Tài liệu đã được upload thành công!</p>
             <div class="d-flex justify-content-around">
+                <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
                 <router-link to="/">
                     <button class="btn btn-outline-primary">
                         Về trang chủ
                     </button>
                 </router-link>
-                <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
             </div>
         </div>
     </div>
