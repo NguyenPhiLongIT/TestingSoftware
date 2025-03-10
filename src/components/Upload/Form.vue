@@ -16,7 +16,7 @@ export default {
                 { id: 4, name: "Khoa học" },
                 { id: 5, name: "Sức khỏe" },
             ],
-            authorName: localStorage.getItem("username") || "Ẩn danh",
+            authorName: localStorage.getItem("username") || "",
             isLoading: false,
             selectedFile: null,
             showModal: false,
@@ -80,7 +80,7 @@ export default {
 
 <template>
     <div class="apply-course">
-        <div class="wrapper">
+        <div class="wrapper" v-if="authorName">
             <form @submit.prevent="submitForm" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-12 mb-3">
@@ -116,6 +116,12 @@ export default {
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="login-required" v-else>
+            <p>Bạn cần đăng nhập để upload tài liệu.</p>
+            <router-link to="/login">
+                <button class="btn btn-primary">Đăng nhập ngay</button>
+            </router-link>
         </div>
     </div>
     <div v-if="showModal" class="modal">
@@ -213,4 +219,13 @@ export default {
     font-size: 30px;
     cursor: pointer;
 }
+.login-required {
+    text-align: center;
+    padding: 40px;
+    font-size: 20px;
+    border-radius: 5px;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
 </style>
