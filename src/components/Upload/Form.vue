@@ -19,6 +19,7 @@ export default {
             accountId: localStorage.getItem("userId") || "",
             isLoading: false,
             selectedFile: null,
+            showModal: false,
         };
     },
 
@@ -36,15 +37,39 @@ export default {
         submitForm() {
             this.isLoading = true;
             setTimeout(() => {
-                console.log("Dữ liệu form:", this.formData);
-                if (this.selectedFile) {
-                    console.log("File tải lên:", this.selectedFile.name);
-                }
-                alert("Tải lên thành công!");
+                const newCard = {
+                    id: Date.now(),
+                    title: this.formData.title,
+                    thumbnail: "https://via.placeholder.com/150",
+                    views: 0,
+                    ratingAvg: 0,
+                    authorName: "",
+                    href: "/tai-lieu-moi",
+                };
+
+                let storedCards = JSON.parse(localStorage.getItem("newCards") || "[]");
+        
+                // Thêm tài liệu mới vào danh sách
+                storedCards.push(newCard);
+                
+                // Lưu lại danh sách vào localStorage
+                localStorage.setItem("newCards", JSON.stringify(storedCards));
+                this.$emit("add-card", newCard);
+                this.showModal = true;
                 this.isLoading = false;
+                this.formData = {
+                    title: "",
+                    categoryId: null,
+                    description: "",
+                    authorId: null,
+                    status: 0,
+                };
+                this.selectedFile = null;
             }, 1000);
         },
-
+        closeModal() {
+            this.showModal = false;
+        }
     },
 };
 </script>
@@ -57,11 +82,12 @@ export default {
                     <div class="col-12 mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
                         <input id="title" type="text" class="form-control" placeholder="Nhập tiêu đề"
-                            v-model="formData.title" />
+                            v-model="formData.title" required />
                     </div>
                     <div class="col-12 d-grid gap-1 mb-3">
                         <label>Danh mục</label>
-                        <select class="select-category" name="categoryId" id="categories" v-model="formData.categoryId">
+                        <select class="select-category" name="categoryId" id="categories" v-model="formData.categoryId"
+                            required>
                             <option v-for="item in Categories" :value="item.id">
                                 {{ item.name }}
                             </option>
@@ -69,7 +95,8 @@ export default {
                     </div>
                     <div class="col-12 mb-3">
                         <label for="formFile" class="form-label">Upload file</label>
-                        <input class="upload form-control" type="file" id="formFile" @change="handleFileUpload"/>
+                        <input class="upload form-control" type="file" id="formFile" @change="handleFileUpload"
+                            required />
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Mô tả</label>
@@ -78,12 +105,20 @@ export default {
                     </div>
                     <div class="col-12 text-center pt-4">
                         <button class="btn-apply" type="submit" :disabled="isLoading">
-                            <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
                             Lưu thông tin
                         </button>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+    <div v-if="showModal" class="modal">
+        <div class="modal-content">
+            <span class="close" @click="closeModal">&times;</span>
+            <p>Tài liệu đã được upload thành công!</p>
+            <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
         </div>
     </div>
 </template>
@@ -132,10 +167,39 @@ export default {
 .upload {
     background: #e9ecef;
 }
+
 .spinner-border {
     margin-right: 5px;
     width: 1rem;
     height: 1rem;
     border-width: 0.2em;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    cursor: pointer;
 }
 </style>
