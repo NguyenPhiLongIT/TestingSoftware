@@ -152,29 +152,18 @@
 					{{ cardContent.title }}
 				</router-link>
 			</h3>
-			<p class="sumary-content fw-bold d-grid">
-			<div class="d-flex gap-2">
-				<span>{{ cardContent.views }} views</span>
-				-
-				<span>{{ cardContent.ratingAvg }} <i class="bi bi-star-fill" style="color:darkgoldenrod;"></i></span>
-			</div>
-			<span style="color: #666;">{{ cardContent.authorName }}</span>
+			<p class="sumary-content fw-bold d-grid gap-1">
+				<div class="d-flex justify-content-between">
+					<span style="color: #666;">{{ cardContent.authorName }}</span>
+
+					<div class="d-flex gap-2">
+						<span>{{ cardContent.views }} views</span>
+						-
+						<span>{{ cardContent.ratingAvg }} <i class="bi bi-star-fill" style="color:darkgoldenrod;"></i></span>
+					</div>
+				</div>
+				<span style="font-size: small;">{{ cardContent.description }}</span>
 			</p>
-			<div class="card-meta mb-2 mt-2" v-if="isTopCard">
-				Chia sẻ bài viết:
-				<a target="_blank" :href="`https://www.facebook.com/sharer/sharer.php?u=${getCurrentLink()}${cardContent.href
-					}`" title="Facebook" class="btn-social facebook">
-					<i class="bi bi-facebook"></i>
-				</a>
-				<a target="_blank" :href="`https://www.linkedin.com/shareArticle?url=${getCurrentLink()}${cardContent.href
-					}`" title="Linkedin" class="btn-social linkedin">
-					<i class="bi bi-linkedin"></i>
-				</a>
-				<a target="_blank" :href="`mailto:?subject=${cardContent.title
-					}&body=${getCurrentLink()}${cardContent.href}`" title="Email" class="email">
-					<i class="bi bi-envelope"></i>
-				</a>
-			</div>
 		</div>
 	</div>
 </template>

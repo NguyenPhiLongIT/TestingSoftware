@@ -30,38 +30,34 @@ export default {
     },
     methods: {
         fetchData() {
-            // Giả lập lấy dữ liệu từ server hoặc localStorage
             this.cards = [
                 {
                     id: 1,
                     title: "Giáo trình Nhập môn trí tuệ nhân tạo",
-                    thumbnail: "https://example.com/vue-thumbnail.jpg",
+                    thumbnail: "/default.png",
                     views: 1200,
                     ratingAvg: 4.5,
                     authorName: "Nguyễn Văn A",
-                    href: "/vue-js",
+                    description: "Giáo trình nhập môn trí tuệ nhân tạo của PTIT"
                 },
                 {
                     id: 2,
                     title: "Toán rời rạc",
-                    thumbnail: "https://example.com/ts-thumbnail.jpg",
+                    thumbnail: "/default.png",
                     views: 800,
                     ratingAvg: 4.7,
                     authorName: "Trần Thị B",
-                    href: "/typescript",
                 },
                 {
                     id: 3,
                     title: "Xác suất thống kê",
-                    thumbnail: "https://example.com/js-thumbnail.jpg",
+                    thumbnail: "/default.png",
                     views: 1500,
                     ratingAvg: 4.8,
                     authorName: "Lê Văn C",
-                    href: "/javascript",
                 },
             ];
 
-            // Kiểm tra nếu có tài liệu mới từ localStorage
             const newCards = JSON.parse(localStorage.getItem("newCards") || "[]");
             this.cards = [...this.cards, ...newCards];
         },

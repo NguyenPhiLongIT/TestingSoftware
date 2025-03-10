@@ -16,7 +16,7 @@ export default {
                 { id: 4, name: "Khoa học" },
                 { id: 5, name: "Sức khỏe" },
             ],
-            accountId: localStorage.getItem("userId") || "",
+            authorName: localStorage.getItem("username") || "Ẩn danh",
             isLoading: false,
             selectedFile: null,
             showModal: false,
@@ -25,13 +25,19 @@ export default {
 
     methods: {
         handleFileUpload(event) {
-            // this.formData.file = file;
-            // const file = event.target.files[0];
             this.selectedFile = event.target.files[0];
             if (!this.selectedFile) {
                 alert("Vui lòng chọn một file hợp lệ.");
                 return;
             }
+            const allowedTypes = ["application/pdf"];
+            if (!allowedTypes.includes(this.selectedFile.type)) {
+                alert("Chỉ cho phép upload file PDF.");
+                this.selectedFile = null;
+                event.target.value = "";
+                return;
+            }
+
             console.log("File được chọn:", this.selectedFile);
         },
         submitForm() {
@@ -40,17 +46,17 @@ export default {
                 const newCard = {
                     id: Date.now(),
                     title: this.formData.title,
-                    thumbnail: "https://via.placeholder.com/150",
+                    thumbnail: "/default.png",
                     views: 0,
                     ratingAvg: 0,
-                    authorName: "admin",
-                    href: "/tai-lieu-moi",
+                    authorName: this.authorName,
+                    description: this.formData.description,
                 };
 
                 let storedCards = JSON.parse(localStorage.getItem("newCards") || "[]");
-        
+
                 storedCards.push(newCard);
-                
+
                 localStorage.setItem("newCards", JSON.stringify(storedCards));
                 this.$emit("add-card", newCard);
                 this.showModal = true;
@@ -116,7 +122,14 @@ export default {
         <div class="modal-content">
             <span class="close" @click="closeModal">&times;</span>
             <p>Tài liệu đã được upload thành công!</p>
-            <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
+            <div class="d-flex justify-content-around">
+                <router-link to="/">
+                    <button class="btn btn-outline-primary">
+                        Về trang chủ
+                    </button>
+                </router-link>
+                <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
+            </div>
         </div>
     </div>
 </template>

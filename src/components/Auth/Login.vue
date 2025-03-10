@@ -76,7 +76,7 @@ export default {
                 localStorage.setItem("userId", "1");
                 
                 setTimeout(() => {
-                    window.location.href = "/upload";
+                    window.location.href = "/";
                 }, 1000);
             } else {
                 this.message = "Tên đăng nhập hoặc mật khẩu không đúng";
