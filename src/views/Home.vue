@@ -14,7 +14,7 @@ export default {
     },
     data() {
         return {
-            title: "Tài liệu",
+            title: "Tất cả tài liệu",
             cards: [] as DataCard[],
         };
     },

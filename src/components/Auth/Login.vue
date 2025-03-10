@@ -77,7 +77,7 @@ export default {
                 
                 setTimeout(() => {
                     window.location.href = "/";
-                }, 1000);
+                }, 1200);
             } else {
                 this.message = "Tên đăng nhập hoặc mật khẩu không đúng";
                 this.isSuccess = false;
