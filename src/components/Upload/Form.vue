@@ -43,16 +43,14 @@ export default {
                     thumbnail: "https://via.placeholder.com/150",
                     views: 0,
                     ratingAvg: 0,
-                    authorName: "",
+                    authorName: "admin",
                     href: "/tai-lieu-moi",
                 };
 
                 let storedCards = JSON.parse(localStorage.getItem("newCards") || "[]");
         
-                // Thêm tài liệu mới vào danh sách
                 storedCards.push(newCard);
                 
-                // Lưu lại danh sách vào localStorage
                 localStorage.setItem("newCards", JSON.stringify(storedCards));
                 this.$emit("add-card", newCard);
                 this.showModal = true;
