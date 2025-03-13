@@ -20,19 +20,19 @@ export default {
             isLoading: false,
             selectedFile: null,
             showModal: false,
+            showErrorModal: false,
+            errorMessage: "",
         };
     },
 
     methods: {
         handleFileUpload(event) {
             this.selectedFile = event.target.files[0];
-            if (!this.selectedFile) {
-                alert("Vui lòng chọn một file hợp lệ.");
-                return;
-            }
+
             const allowedTypes = ["application/pdf"];
             if (!allowedTypes.includes(this.selectedFile.type)) {
-                alert("Chỉ cho phép upload file PDF.");
+                this.showErrorModal = true;
+                this.errorMessage = "Chỉ cho phép upload file PDF.";
                 this.selectedFile = null;
                 event.target.value = "";
                 return;
@@ -40,7 +40,13 @@ export default {
 
             console.log("File được chọn:", this.selectedFile);
         },
+
         submitForm() {
+            this.validateForm();
+            if (this.$refs.form.checkValidity() === false) {
+                this.isLoading = false;
+                return;
+            }
             this.isLoading = true;
             setTimeout(() => {
                 const newCard = {
@@ -54,13 +60,13 @@ export default {
                 };
 
                 let storedCards = JSON.parse(localStorage.getItem("newCards") || "[]");
-
                 storedCards.push(newCard);
-
                 localStorage.setItem("newCards", JSON.stringify(storedCards));
+
                 this.$emit("add-card", newCard);
                 this.showModal = true;
                 this.isLoading = false;
+
                 this.formData = {
                     title: "",
                     categoryId: null,
@@ -69,10 +75,25 @@ export default {
                     status: 0,
                 };
                 this.selectedFile = null;
+                this.$refs.form.classList.remove("was-validated");
+
             }, 1000);
         },
+
         closeModal() {
             this.showModal = false;
+            this.showErrorModal = false;
+            this.$forceUpdate();
+        },
+        validateForm() {
+            const form = this.$refs.form;
+            if (form) {
+                form.classList.add('was-validated');
+            }
+        },
+        showErrorModal(message) {
+            this.errorMessage = message;
+            this.showErrorModal = true;
         }
     },
 };
@@ -81,31 +102,45 @@ export default {
 <template>
     <div class="apply-course">
         <div class="wrapper" v-if="authorName">
-            <form @submit.prevent="submitForm" enctype="multipart/form-data">
+            <form ref="form" @submit.prevent="submitForm" enctype="multipart/form-data" class="needs-validation"
+                novalidate>
                 <div class="row">
                     <div class="col-12 mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
                         <input id="title" type="text" class="form-control" placeholder="Nhập tiêu đề"
                             v-model="formData.title" required />
+                        <div class="invalid-feedback">
+                            Vui lòng nhập tiêu đề tài liệu.
+                        </div>
                     </div>
                     <div class="col-12 d-grid gap-1 mb-3">
                         <label>Danh mục</label>
-                        <select class="select-category" name="categoryId" id="categories" v-model="formData.categoryId"
-                            required>
+                        <select class="select-category form-control" name="categoryId" id="categories"
+                            v-model="formData.categoryId" required>
+                            <option value="" disabled selected>Chọn danh mục</option>
                             <option v-for="item in Categories" :value="item.id">
                                 {{ item.name }}
                             </option>
                         </select>
+                        <div class="invalid-feedback">
+                            Vui lòng chọn danh mục tài liệu.
+                        </div>
                     </div>
                     <div class="col-12 mb-3">
                         <label for="formFile" class="form-label">Upload file</label>
                         <input class="upload form-control" type="file" id="formFile" @change="handleFileUpload"
                             required />
+                        <div class="invalid-feedback">
+                            Vui lòng upload file tài liệu.
+                        </div>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Mô tả</label>
                         <textarea class="description form-control" type="text" placeholder="Nhập mô tả"
                             name="description" v-model="formData.description"></textarea>
+                        <div class="invalid-feedback">
+                            Vui lòng nhập mô tả tài liệu.
+                        </div>
                     </div>
                     <div class="col-12 text-center pt-4">
                         <button class="btn-apply" type="submit" :disabled="isLoading">
@@ -135,6 +170,15 @@ export default {
                         Về trang chủ
                     </button>
                 </router-link>
+            </div>
+        </div>
+    </div>
+    <div v-show="showErrorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" @click="closeModal">&times;</span>
+            <p>{{ errorMessage }}</p>
+            <div class="d-flex justify-content-around">
+                <button @click="closeModal" class="btn btn-outline-danger">Đóng</button>
             </div>
         </div>
     </div>
@@ -210,6 +254,7 @@ export default {
     border-radius: 5px;
     width: 400px;
     text-align: center;
+    position: relative;
 }
 
 .close {
@@ -219,6 +264,7 @@ export default {
     font-size: 30px;
     cursor: pointer;
 }
+
 .login-required {
     text-align: center;
     padding: 40px;
@@ -227,5 +273,4 @@ export default {
     margin: 20px auto;
     max-width: 500px;
 }
-
 </style>

@@ -15,18 +15,30 @@
 }
 </style>
 <template>
+    <div class="message" v-if="message !== null && message !== ''">
+            <div v-if="isSuccess" class="alert alert-success">
+                {{ message }}
+            </div>
+            <div v-else class="alert alert-danger">{{ message }}</div>
+        </div>
     <div class="form container mt-3">
         <h2>Đăng nhập</h2>
-        <form @submit.prevent="login">
+        <form ref="form" @submit.prevent="login" class="needs-validation" novalidate>
             <div class="form-group mb-4">
                 <label for="username">Tên tài khoản</label>
                 <input type="text" class="form-control" id="username" placeholder="Tài khoản" v-model="username"
                     required />
+                <div class="invalid-feedback">
+                    Vui lòng nhập tên tài khoản.
+                </div>
             </div>
             <div class="form-group mb-4">
                 <label for="password">Mật khẩu</label>
                 <input type="password" class="form-control" id="password" placeholder="Mật khẩu" v-model="password"
                     required />
+                <div class="invalid-feedback">
+                    Vui lòng nhập mật khẩu.
+                </div>
             </div>
             <div class="d-flex justify-content-between">
                 <div class="mb-4 form-check">
@@ -34,12 +46,6 @@
                     <label class="form-check-label" for="exampleCheck1">Nhớ tài khoản</label>
                 </div>
                 <p style="text-decoration: underline">Quên mật khẩu</p>
-            </div>
-            <div class="message" v-if="message !== null && message !== ''">
-                <div v-if="isSuccess" class="alert alert-success">
-                    {{ message }}
-                </div>
-                <div v-else class="alert alert-danger">{{ message }}</div>
             </div>
             <button type="submit" class="btn btn-primary mb-2">
                 Đăng nhập
@@ -63,6 +69,14 @@ export default {
     },
     methods: {
         login() {
+            this.validateForm();
+
+            if (this.$refs.form.checkValidity() === false) {
+                this.message = "Vui lòng điền đầy đủ thông tin.";
+                this.isSuccess = false;
+                return;
+            }
+
             const mockUser = {
                 username: "admin",
                 password: "admin"
@@ -83,6 +97,12 @@ export default {
                 this.isSuccess = false;
             }
         },
+        validateForm() {
+            const form = this.$refs.form;
+            if (form) {
+                form.classList.add('was-validated');
+            }
+        }
     },
 };
 </script>
