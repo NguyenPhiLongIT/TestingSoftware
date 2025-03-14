@@ -25,7 +25,7 @@ async function isRequired(element) {
 }
 
 /**
- * Kiểm thử toàn bộ form đăng nhập
+ * Function to check whole login form 
  */
 async function testLoginForm(driver) {
     try {
@@ -99,6 +99,9 @@ async function testLoginForm(driver) {
     return true;
 }
 
+/*
+ * Function to check whole upload form
+ */
 async function testUploadForm(driver) {
     // Chờ đến trang upload
     await driver.wait(until.elementLocated(
