@@ -15,12 +15,6 @@
 }
 </style>
 <template>
-    <div class="message" v-if="message !== null && message !== ''">
-            <div v-if="isSuccess" class="alert alert-success">
-                {{ message }}
-            </div>
-            <div v-else class="alert alert-danger">{{ message }}</div>
-        </div>
     <div class="form container mt-3">
         <h2>Đăng nhập</h2>
         <form ref="form" @submit.prevent="login" class="needs-validation" novalidate>
@@ -47,6 +41,12 @@
                 </div>
                 <p style="text-decoration: underline">Quên mật khẩu</p>
             </div>
+            <div class="message" v-if="message !== null && message !== ''">
+                <div v-if="isSuccess" class="alert alert-success">
+                    {{ message }}
+                </div>
+                <div v-else class="alert alert-danger">{{ message }}</div>
+            </div>
             <button type="submit" class="btn btn-primary mb-2">
                 Đăng nhập
             </button>
@@ -72,7 +72,7 @@ export default {
             this.validateForm();
 
             if (this.$refs.form.checkValidity() === false) {
-                this.message = "Vui lòng điền đầy đủ thông tin.";
+                this.message = "Yêu cầu nhập tên đăng nhập và mật khẩu.";
                 this.isSuccess = false;
                 return;
             }

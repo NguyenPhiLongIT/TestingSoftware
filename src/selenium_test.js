@@ -68,15 +68,18 @@ async function testLoginForm(driver) {
 
         await driver.sleep(500); // Chờ xử lý validation
 
+        let errorMessageElement = await driver.findElement(By.css(".alert-danger"));
+        let actualErrorMessage = await errorMessageElement.getText();
+
         if (await isRequired(usernameInput) && test.username === '') {
-            assert.strictEqual("Yêu cầu nhập tên đăng nhập và mật khẩu.", test.expectedError, `❌ Expected "${test.expectedError}", but got "Yêu cầu nhập tên đăng nhập và mật khẩu."`);
-            console.log("✅ Passed: Yêu cầu nhập tên đăng nhập và mật khẩu.");
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
+            console.log(`✅ Passed: ${actualErrorMessage}`);
             continue;
         }
 
         if (await isRequired(passwordInput) && test.password === '') {
-            assert.strictEqual("Yêu cầu nhập tên đăng nhập và mật khẩu.", test.expectedError, `❌ Expected "${test.expectedError}", but got "Yêu cầu nhập tên đăng nhập và mật khẩu."`);
-            console.log("✅ Passed: Yêu cầu nhập tên đăng nhập và mật khẩu.");
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
+            console.log(`✅ Passed: ${actualErrorMessage}`);    
             continue;
         }
 
