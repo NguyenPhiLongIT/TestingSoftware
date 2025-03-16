@@ -112,25 +112,25 @@ async function testUploadForm(driver) {
     // Test cases
     const testCases = [
         // Missing title
-        // { title: "", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No title test", expectedError: "Vui lòng điền đầy đủ thông tin." },
+        { title: "", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No title test", expectedError: "Vui lòng điền đầy đủ thông tin." },
 
-        // // Missing category
-        // { title: "No Category", category: null, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No category test", expectedError: "Vui lòng điền đầy đủ thông tin." },
+        // Missing category
+        { title: "No Category", category: null, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No category test", expectedError: "Vui lòng điền đầy đủ thông tin." },
 
-        // // Missing file
-        // { title: "No File", category: 1, filename: "", description: "No file selected", expectedError: "Vui lòng điền đầy đủ thông tin." },
+        // Missing file
+        { title: "No File", category: 1, filename: "", description: "No file selected", expectedError: "Vui lòng điền đầy đủ thông tin." },
 
-        // // Missing description
-        // // { title: "No Description", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "", expectedError: "Tài liệu đã được upload thành công!" },
+        // Missing description
+        { title: "No Description", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "", expectedError: "Tài liệu đã được upload thành công!" },
 
         
-        // { title: "Invalid File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\toolbox-installer-HdzdVevku9km_fZhvAmrcQ.exe", description: "", expectedError: "Chỉ cho phép upload file PDF." },
+        { title: "Invalid File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\toolbox-installer-HdzdVevku9km_fZhvAmrcQ.exe", description: "", expectedError: "Chỉ cho phép upload file PDF." },
         
-        // // File in an unsupported format (e.g., .jpg)
-        // { title: "Invalid Image File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\image.jpg", description: "Image file test", expectedError: "Chỉ cho phép upload file PDF." },
+        // File in an unsupported format (e.g., .jpg)
+        { title: "Invalid Image File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\image.jpg", description: "Image file test", expectedError: "Chỉ cho phép upload file PDF." },
 
-        // // File in an unsupported format (e.g., .docx)
-        // { title: "Invalid Word File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.docx", description: "Word file test", expectedError: "Chỉ cho phép upload file PDF." },
+        // File in an unsupported format (e.g., .docx)
+        { title: "Invalid Word File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.docx", description: "Word file test", expectedError: "Chỉ cho phép upload file PDF." },
 
         // File without an extension
         { title: "No Extension", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\file_without_extension", description: "No extension test", expectedError: "Chỉ cho phép upload file PDF." },
