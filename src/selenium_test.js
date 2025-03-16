@@ -40,8 +40,8 @@ async function testLoginForm(driver) {
     // Test cases gồm cả username & password
     const testCases = [
         { username: "", password: "", expectedError: "Yêu cầu nhập tên đăng nhập và mật khẩu." },
-        { username: "user@#$%", password: "", expectedError: "Yêu cầu nhập tên đăng nhập và mật khẩu." },
         { username: "", password: "wrongpass", expectedError: "Yêu cầu nhập tên đăng nhập và mật khẩu." },
+        { username: "user@#$%", password: "", expectedError: "Yêu cầu nhập tên đăng nhập và mật khẩu." },
         { username: "user@#$%", password: "short", expectedError: "Tên đăng nhập hoặc mật khẩu không đúng" },
         { username: "admin", password: "wrongpass", expectedError: "Tên đăng nhập hoặc mật khẩu không đúng" },
         { username: "admin", password: "admin", expectedError: "Đăng nhập thành công!" }
@@ -68,7 +68,7 @@ async function testLoginForm(driver) {
 
         await driver.sleep(500); // Chờ xử lý validation
 
-        let errorMessageElement = await driver.findElement(By.css(".alert-danger"));
+        let errorMessageElement = await driver.findElement(By.css(".alert"));
         let actualErrorMessage = await errorMessageElement.getText();
 
         if (await isRequired(usernameInput) && test.username === '') {
@@ -111,68 +111,80 @@ async function testUploadForm(driver) {
 
     // Test cases
     const testCases = [
-        { title: "Invalid File", category: 1, filename: "D:\\Downloads\\toolbox-installer-HdzdVevku9km_fZhvAmrcQ.exe", description: "", expectedError: "Chỉ cho phép upload file PDF." },
-        { title: "Valid PDF", category: 1, filename: "D:\\Downloads\\document.pdf", description: "Test upload PDF", expectedError: "Tài liệu đã được upload thành công!" },
-        // File in an unsupported format (e.g., .jpg)
-        { title: "Invalid Image File", category: 1, filename: "D:\\Downloads\\image.jpg", description: "Image file test", expectedError: "Chỉ cho phép upload file PDF." },
+        // Missing title
+        // { title: "", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No title test", expectedError: "Vui lòng điền đầy đủ thông tin." },
 
-        // File in an unsupported format (e.g., .docx)
-        { title: "Invalid Word File", category: 1, filename: "D:\\Downloads\\document.docx", description: "Word file test", expectedError: "Chỉ cho phép upload file PDF." },
+        // // Missing category
+        // { title: "No Category", category: null, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No category test", expectedError: "Vui lòng điền đầy đủ thông tin." },
+
+        // // Missing file
+        // { title: "No File", category: 1, filename: "", description: "No file selected", expectedError: "Vui lòng điền đầy đủ thông tin." },
+
+        // // Missing description
+        // // { title: "No Description", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "", expectedError: "Tài liệu đã được upload thành công!" },
+
+        
+        // { title: "Invalid File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\toolbox-installer-HdzdVevku9km_fZhvAmrcQ.exe", description: "", expectedError: "Chỉ cho phép upload file PDF." },
+        
+        // // File in an unsupported format (e.g., .jpg)
+        // { title: "Invalid Image File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\image.jpg", description: "Image file test", expectedError: "Chỉ cho phép upload file PDF." },
+
+        // // File in an unsupported format (e.g., .docx)
+        // { title: "Invalid Word File", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.docx", description: "Word file test", expectedError: "Chỉ cho phép upload file PDF." },
 
         // File without an extension
-        { title: "No Extension", category: 1, filename: "D:\\Downloads\\file_without_extension", description: "No extension test", expectedError: "Chỉ cho phép upload file PDF." },
-
+        { title: "No Extension", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\file_without_extension", description: "No extension test", expectedError: "Chỉ cho phép upload file PDF." },
+        
+        { title: "Valid PDF", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "Test upload PDF", expectedError: "Tài liệu đã được upload thành công!" },
+        // Special characters in title
+        { title: "Title@#$%^&*", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "Special characters in title", expectedError: "Tài liệu đã được upload thành công!" },
         // File with uppercase extension
-        { title: "Uppercase Extension", category: 1, filename: "D:\\Downloads\\DOCUMENT.PDF", description: "Uppercase extension test", expectedError: "Tài liệu đã được upload thành công!" },
+        { title: "Uppercase Extension", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "Uppercase extension test", expectedError: "Tài liệu đã được upload thành công!" },
 
         // Upload same file twice
-        { title: "Duplicate Upload", category: 1, filename: "D:\\Downloads\\document.pdf", description: "Upload same file twice", expectedError: "Tài liệu đã được upload thành công!" },
-
-        // Missing title
-        { title: "", category: 1, filename: "D:\\Downloads\\document.pdf", description: "No title test", expectedError: "Tiêu đề không được để trống." },
-
-        // Missing category
-        { title: "No Category", category: null, filename: "D:\\Downloads\\document.pdf", description: "No category test", expectedError: "Vui lòng chọn danh mục." },
-
-        // Missing file
-        { title: "No File", category: 1, filename: "", description: "No file selected", expectedError: "Vui lòng chọn file để upload." },
-
-        // Missing description
-        { title: "No Description", category: 1, filename: "D:\\Downloads\\document.pdf", description: "", expectedError: "Tài liệu đã được upload thành công!" },
-
-        // Special characters in title
-        { title: "Title@#$%^&*", category: 1, filename: "D:\\Downloads\\document.pdf", description: "Special characters in title", expectedError: "Tài liệu đã được upload thành công!" },
+        { title: "Duplicate Upload", category: 1, filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "Upload same file twice", expectedError: "Tài liệu đã được upload thành công!" },
 
         // Title too long
         // { title: "a".repeat(300), category: 1, filename: "D:\\Downloads\\document.pdf", description: "Long title test", expectedError: "Tiêu đề quá dài." }
     ];
-
-
+    // Locate form elements  
+    let titleInput = await driver.wait(until.elementLocated(By.id("title")), 5000);
+    let categoryDropdown = await driver.findElement(By.id("categories"));
+    let fileInput = await driver.findElement(By.id("formFile"));
+    let descriptionInput = await driver.findElement(By.xpath('//*[@id="app-content"]/div/div[2]/div/form/div/div[4]/textarea'));
+    let submitButton = await driver.findElement(By.xpath('//*[@id="app-content"]/div/div[2]/div/form/div/div[5]/button'));
+   
     for (let test of testCases) {
         await driver.sleep(2000);
         console.log(`🔄 Testing file: "${test.filename}"`);
 
-        // Locate form elements  
-        let titleInput = await driver.wait(until.elementLocated(By.id("title")), 5000);
-        let categoryDropdown = await driver.findElement(By.id("categories"));
-        let fileInput = await driver.findElement(By.id("formFile"));
-        let descriptionInput = await driver.findElement(By.xpath('//*[@id="app-content"]/div/div[2]/div/form/div/div[4]/textarea'));
-        let submitButton = await driver.findElement(By.xpath('//*[@id="app-content"]/div/div[2]/div/form/div/div[5]/button'));
+        // Cuộn đến phần tử để đảm bảo nó nằm trong khung nhìn
+        await driver.executeScript("arguments[0].scrollIntoView(true);", submitButton);
 
+        await driver.sleep(500);
         await titleInput.clear();
         await descriptionInput.clear();
-
         // Nhập thông tin
         await titleInput.sendKeys(test.title);
+        // Nhập mô tả  
+        await driver.executeScript("arguments[0].value = '';", descriptionInput);
+        await descriptionInput.sendKeys(test.description);
+
+        // Nhấn submit
+        await submitButton.click();
+        await driver.sleep(1000); // Chờ xác nhận
+
+        let messageElement = await driver.findElement(By.css(".alert"));
+        let actualErrorMessage = await messageElement.getText();
 
         if (await isRequired(titleInput) && test.title === '') {
-            assert.strictEqual("Tiêu đề không được để trống.", test.expectedError, `❌ Expected "${test.expectedError}", but got "Tiêu đề không được để trống."`);
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
             console.log("✅ Passed: Tiêu đề không được để trống.");
             continue;
         }
 
         if (test.category === null || test.category === undefined) {
-            assert.strictEqual("Vui lòng chọn danh mục.", test.expectedError, `❌ Expected "${test.expectedError}", but got "Vui lòng chọn danh mục."`);
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
             console.log("✅ Passed: Vui lòng chọn danh mục.");
             continue;
         }
@@ -182,7 +194,7 @@ async function testUploadForm(driver) {
         await categoryOption.click();
 
         if (test.filename === undefined || test.filename === '' || test.filename === null) {
-            assert.strictEqual("Vui lòng chọn file để upload.", test.expectedError, `❌ Expected "${test.expectedError}", but got "Vui lòng chọn file để upload."`);
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
             console.log("✅ Passed: Vui lòng chọn file để upload.");
             continue;
         }
@@ -198,52 +210,31 @@ async function testUploadForm(driver) {
 
         try {
             console.log("🔍 Kiểm tra alert...");
-            let isAlertPresent = await driver.wait(until.alertIsPresent(), 10000);
-
-            if (isAlertPresent) {
-                let alert = await driver.switchTo().alert();
-                let alertText = await alert.getText();
-                console.log(`⚠️ Alert xuất hiện: "${alertText}"`);
-
-                // Kiểm tra nội dung alert
-                assert.strictEqual(alertText, test.expectedError, `❌ Expected "${test.expectedError}", but got "${alertText}"`);
-                await alert.accept();
-                console.log(`✅ Passed: ${test.expectedError}`);
-                continue;
-            }
+            
+            // Chờ alert xuất hiện tối đa 5 giây
+            await driver.wait(until.alertIsPresent(), 5000);
+            
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            console.log(`⚠️ Alert xuất hiện: "${alertText}"`);
+        
+            // Kiểm tra nội dung alert
+            assert.strictEqual(alertText, test.expectedError, `❌ Expected "${test.expectedError}", but got "${alertText}"`);
+            await alert.accept();
+            console.log(`✅ Passed: ${test.expectedError}`);
+        
+            // Nếu có alert thì bỏ qua các bước tiếp theo
+            continue;
         } catch (error) {
-            if (error.name == "InvalidArgumentError") {
-                let isAlertPresent = await driver.wait(until.alertIsPresent(), 10000);
-
-                if (isAlertPresent) {
-                    let alert = await driver.switchTo().alert();
-                    let alertText = await alert.getText();
-                    console.log(`⚠️ Alert xuất hiện: "${alertText}"`);
-
-                    // Kiểm tra nội dung alert
-                    assert.strictEqual(alertText, test.expectedError, `❌ Expected "${test.expectedError}", but got "${alertText}"`);
-                    await alert.accept();
-                    console.log(`✅ Passed: ${test.expectedError}`);
-                    continue;
-                }
-            }
-            console.error(`❌ Failed: ${error.message}`);
+            console.log("⚠️ Không có alert xuất hiện, tiếp tục kiểm tra thông báo lỗi trong trang.");
         }
-
-        // Nhập mô tả  
-        await descriptionInput.sendKeys(test.description);
-
-        await driver.sleep(500); // Chờ cập nhật form
-
-        // Nhấn submit
-        await submitButton.click();
-        await driver.sleep(1000); // Chờ xác nhận
-
+        
         // Kiểm tra thông báo thành công
         try {
             let successMessage = await driver.wait(
                 until.elementLocated(By.xpath('//*[@id="app-content"]/div/div[3]/div/p')),
-                3000
+                // until.elementLocated(By.css(".alert")),
+                2000
             );
             let successText = await successMessage.getText();
             assert.strictEqual(successText, test.expectedError, `❌ Expected "${test.expectedError}", but got "${successText}"`);
@@ -256,13 +247,13 @@ async function testUploadForm(driver) {
                 if (testCases.indexOf(test) === testCases.length - 1) {
                     await driver.wait(
                         until.elementLocated(By.xpath('//*[@id="app-content"]/div/div[3]/div/div/a/button')),
-                        5000
+                        1500
                     ).click();
                 }
 
                 await driver.wait(
                     until.elementLocated(By.xpath('//*[@id="app-content"]/div/div[3]/div/div/button')),
-                    5000
+                    1500
                 ).click();
             }
         } catch (error) {

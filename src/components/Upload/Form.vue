@@ -22,17 +22,21 @@ export default {
             showModal: false,
             showErrorModal: false,
             errorMessage: "",
+            message: null,
+            isSuccess: false,
         };
     },
 
     methods: {
         handleFileUpload(event) {
             this.selectedFile = event.target.files[0];
-
+            if (!this.selectedFile) {
+                alert("Vui lòng chọn một file hợp lệ.");
+                return;
+            }
             const allowedTypes = ["application/pdf"];
             if (!allowedTypes.includes(this.selectedFile.type)) {
-                this.showErrorModal = true;
-                this.errorMessage = "Chỉ cho phép upload file PDF.";
+                alert("Chỉ cho phép upload file PDF.");
                 this.selectedFile = null;
                 event.target.value = "";
                 return;
@@ -45,6 +49,7 @@ export default {
             this.validateForm();
             if (this.$refs.form.checkValidity() === false) {
                 this.isLoading = false;
+                this.message = "Vui lòng điền đầy đủ thông tin.";
                 return;
             }
             this.isLoading = true;
@@ -76,6 +81,8 @@ export default {
                 };
                 this.selectedFile = null;
                 this.$refs.form.classList.remove("was-validated");
+                this.message = "Tài liệu đã được upload thành công!";
+                this.isSuccess = true;
 
             }, 1000);
         },
@@ -102,8 +109,7 @@ export default {
 <template>
     <div class="apply-course">
         <div class="wrapper" v-if="authorName">
-            <form ref="form" @submit.prevent="submitForm" enctype="multipart/form-data" class="needs-validation"
-                novalidate>
+            <form ref="form" @submit.prevent="submitForm" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-12 mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
@@ -141,6 +147,12 @@ export default {
                         <div class="invalid-feedback">
                             Vui lòng nhập mô tả tài liệu.
                         </div>
+                    </div>
+                    <div class="message" v-if="message !== null && message !== ''">
+                        <div v-if="isSuccess" class="alert alert-success">
+                            {{ message }}
+                        </div>
+                        <div v-else class="alert alert-danger">{{ message }}</div>
                     </div>
                     <div class="col-12 text-center pt-4">
                         <button class="btn-apply" type="submit" :disabled="isLoading">
