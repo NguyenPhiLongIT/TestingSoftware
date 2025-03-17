@@ -54,6 +54,13 @@ export default {
                 this.hideMessageAfterDelay();
                 return;
             }
+            if (!this.isTitleValid()) {
+                this.isLoading = false;
+                this.message = "Vui lòng nhập tiêu đề hợp lệ.";
+                this.isSuccess = false;
+                this.hideMessageAfterDelay();
+                return;
+            }
             this.isLoading = true;
             setTimeout(() => {
                 const newCard = {
@@ -91,6 +98,12 @@ export default {
                 this.$refs.fileInput.value = "";
 
             }, 1000);
+        },
+
+        isTitleValid() {
+            const startsWithSpecialChar = /^[!@#$%^&*(),.?":{}|<>]/.test(this.formData.title);
+            const exceedsMaxLength = this.formData.title.length > 100;
+            return !(startsWithSpecialChar || exceedsMaxLength);
         },
 
         closeModal() {

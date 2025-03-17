@@ -137,6 +137,16 @@ async function testUploadForm(driver) {
             description: "No file selected", 
             expectedError: "Vui lòng điền đầy đủ thông tin." },
         
+        // Special characters in title
+        { title: "@#$%^&*Title", category: 2, 
+            filename: path.join(baseDir, "document2.pdf"), 
+            description: "Special characters in title", expectedError: "Vui lòng nhập tiêu đề hợp lệ." },
+            
+        // Title too long
+        { title: "a".repeat(300), category: 1, filename: path.join(baseDir, "document2.pdf"), 
+            description: "Long title test", expectedError: "Vui lòng nhập tiêu đề hợp lệ." },
+
+        // File in an unsupported format (e.g., .exe)
         { title: "Invalid File", category: 1, 
             filename: path.join(baseDir, "toolbox-installer.exe"), 
             description: "", expectedError: "Chỉ cho phép upload file PDF." },
@@ -159,11 +169,6 @@ async function testUploadForm(driver) {
         { title: "Valid PDF", category: 1, 
             filename: path.join(baseDir, "document1.pdf"), 
             description: "Test upload PDF", expectedError: "Tài liệu đã được upload thành công!" },
-
-        // Special characters in title
-        { title: "Title@#$%^&*", category: 2, 
-            filename: path.join(baseDir, "document2.pdf"), 
-            description: "Special characters in title", expectedError: "Tài liệu đã được upload thành công!" },
 
         // File with uppercase extension
         { title: "Uppercase Extension", category: 3, 
@@ -231,6 +236,12 @@ async function testUploadForm(driver) {
         if (await isRequired(titleInput) && test.title === '') {
             assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
             console.log("✅ Not Passed: Tiêu đề không được để trống.");
+            continue;
+        }
+
+        if (test.expectedError === "Vui lòng nhập tiêu đề hợp lệ.") {
+            assert.strictEqual(actualErrorMessage, test.expectedError, `❌ Expected "${test.expectedError}", but got "${actualErrorMessage}"`);
+            console.log("✅ Not Passed: Tiêu đề không hợp lệ.");
             continue;
         }
 
