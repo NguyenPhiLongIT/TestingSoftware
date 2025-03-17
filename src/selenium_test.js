@@ -1,7 +1,13 @@
 import { By, Builder, until, Select, Browser } from 'selenium-webdriver';
 import assert from 'assert';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 const BASE_URL = 'http://localhost:5173/';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const baseDir = path.resolve(__dirname, '../public/file_test');
 
 /**
  * Function to clear and input data into a field
@@ -118,12 +124,12 @@ async function testUploadForm(driver) {
     const testCases = [
         // Missing title
         { title: "", category: 1, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No title test", 
+            filename: path.join(baseDir, "document.pdf"), description: "No title test", 
             expectedError: "Vui lòng điền đầy đủ thông tin." },
 
         // Missing category
         { title: "No Category", category: null, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.pdf", description: "No category test", 
+            filename: path.join(baseDir, "document.pdf"), description: "No category test", 
             expectedError: "Vui lòng điền đầy đủ thông tin." },
 
         // Missing file
@@ -132,36 +138,36 @@ async function testUploadForm(driver) {
             expectedError: "Vui lòng điền đầy đủ thông tin." },
         
         { title: "Invalid File", category: 1, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\toolbox-installer-HdzdVevku9km_fZhvAmrcQ.exe", 
+            filename: path.join(baseDir, "toolbox-installer.exe"), 
             description: "", expectedError: "Chỉ cho phép upload file PDF." },
         
         // File in an unsupported format (e.g., .jpg)
         { title: "Invalid Image File", category: 4, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\image.jpg", 
+            filename: path.join(baseDir, "image.jpg"), 
             description: "Image file test", expectedError: "Chỉ cho phép upload file PDF." },
 
         // File in an unsupported format (e.g., .docx)
         { title: "Invalid Word File", category: 2, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document.docx", 
+            filename: path.join(baseDir, "document.docx"), 
             description: "Word file test", expectedError: "Chỉ cho phép upload file PDF." },
 
         // File without an extension
         { title: "No Extension", category: 3, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\file_without_extension", 
+            filename: path.join(baseDir, "file_without_extension"), 
             description: "No extension test", expectedError: "Chỉ cho phép upload file PDF." },
 
         { title: "Valid PDF", category: 1, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document1.pdf", 
+            filename: path.join(baseDir, "document1.pdf"), 
             description: "Test upload PDF", expectedError: "Tài liệu đã được upload thành công!" },
 
         // Special characters in title
         { title: "Title@#$%^&*", category: 2, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document2.pdf", 
+            filename: path.join(baseDir, "document2.pdf"), 
             description: "Special characters in title", expectedError: "Tài liệu đã được upload thành công!" },
 
         // File with uppercase extension
         { title: "Uppercase Extension", category: 3, 
-            filename: "F:\\Nam4\\ChuyenDeCNPM\\TestingSoftware\\public\\file_test\\document3.pdf", 
+            filename: path.join(baseDir, "document3.pdf"), 
             description: "Uppercase extension test", expectedError: "Tài liệu đã được upload thành công!" },
     ];
     // Locate form elements  
