@@ -50,6 +50,8 @@ export default {
             if (this.$refs.form.checkValidity() === false) {
                 this.isLoading = false;
                 this.message = "Vui lòng điền đầy đủ thông tin.";
+                this.isSuccess = false;
+                this.hideMessageAfterDelay();
                 return;
             }
             this.isLoading = true;
@@ -83,6 +85,10 @@ export default {
                 this.$refs.form.classList.remove("was-validated");
                 this.message = "Tài liệu đã được upload thành công!";
                 this.isSuccess = true;
+                this.hideMessageAfterDelay();
+
+                // Clear file input
+                this.$refs.fileInput.value = "";
 
             }, 1000);
         },
@@ -101,6 +107,13 @@ export default {
         showErrorModal(message) {
             this.errorMessage = message;
             this.showErrorModal = true;
+            this.hideMessageAfterDelay();
+        },
+        hideMessageAfterDelay() {
+            setTimeout(() => {
+                this.message = null;
+                this.isSuccess = false;
+            }, 2000);
         }
     },
 };
@@ -134,7 +147,7 @@ export default {
                     </div>
                     <div class="col-12 mb-3">
                         <label for="formFile" class="form-label">Upload file</label>
-                        <input class="upload form-control" type="file" id="formFile" @change="handleFileUpload"
+                        <input ref="fileInput" class="upload form-control" type="file" id="formFile" @change="handleFileUpload"
                             required />
                         <div class="invalid-feedback">
                             Vui lòng upload file tài liệu.

@@ -74,6 +74,7 @@ export default {
             if (this.$refs.form.checkValidity() === false) {
                 this.message = "Yêu cầu nhập tên đăng nhập và mật khẩu.";
                 this.isSuccess = false;
+                this.hideMessageAfterDelay();
                 return;
             }
 
@@ -95,6 +96,7 @@ export default {
             } else {
                 this.message = "Tên đăng nhập hoặc mật khẩu không đúng";
                 this.isSuccess = false;
+                this.hideMessageAfterDelay();
             }
         },
         validateForm() {
@@ -102,6 +104,12 @@ export default {
             if (form) {
                 form.classList.add('was-validated');
             }
+        },
+        hideMessageAfterDelay() {
+            setTimeout(() => {
+                this.message = null;
+                this.isSuccess = false;
+            }, 2000); // Hide message after 2 seconds
         }
     },
 };
